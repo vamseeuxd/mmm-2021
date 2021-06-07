@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { SwUpdate } from '@angular/service-worker';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Router} from '@angular/router';
+import {SwUpdate} from '@angular/service-worker';
 
-import { MenuController, Platform, ToastController } from '@ionic/angular';
+import {MenuController, Platform, ToastController} from '@ionic/angular';
 
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import { Storage } from '@ionic/storage';
+import {Storage} from '@ionic/storage';
 
-import { UserData } from './providers/user-data';
+import {UserData} from './providers/user-data';
+import {MmmFireService} from './services/mmm-fire/mmm-fire.service';
 
 @Component({
   selector: 'app-root',
@@ -53,6 +54,7 @@ export class AppComponent implements OnInit {
     private userData: UserData,
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
+    private mmmFireService: MmmFireService,
   ) {
     this.initializeApp();
   }
