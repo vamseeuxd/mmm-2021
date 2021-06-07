@@ -6,7 +6,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ionic serve --external",
+    "start1": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
