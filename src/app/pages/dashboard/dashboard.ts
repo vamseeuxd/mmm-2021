@@ -1,11 +1,25 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {AlertController, Config, IonList, IonRouterOutlet, LoadingController, ModalController, ToastController} from '@ionic/angular';
+import {
+  AlertController,
+  Config,
+  IonFab,
+  IonList,
+  IonRouterOutlet,
+  LoadingController,
+  ModalController,
+  PopoverController,
+  ToastController
+} from '@ionic/angular';
 
 import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
 import {ConferenceData} from '../../providers/conference-data';
 import {UserData} from '../../providers/user-data';
 import {ITransactionGroup, MmmFireService} from '../../services/mmm-fire/mmm-fire.service';
+import {UtilitiesDropDownComponent} from '../../components/utilities-drop-down/utilities-drop-down.component';
+import {ManageCategoriesPage} from '../manage-categories/manage-categories.page';
+import {ManageExpensesForPage} from '../manage-expenses-for/manage-expenses-for.page';
+import {ManageTaxSavingSectionsPage} from '../manage-tax-saving-sections/manage-tax-saving-sections.page';
 
 @Component({
   selector: 'page-dashboard',
@@ -37,9 +51,34 @@ export class DashboardPage implements OnInit {
     public routerOutlet: IonRouterOutlet,
     public toastCtrl: ToastController,
     public user: UserData,
+    public popoverController: PopoverController,
     public mmmFireService: MmmFireService,
     public config: Config
   ) {
+    // UtilitiesDropDownComponent
+  }
+
+  async showUtilitiesPopover(ev: any) {
+    const popover = await this.popoverController.create({
+      component: UtilitiesDropDownComponent,
+      cssClass: '',
+      event: ev,
+      translucent: true
+    });
+    await popover.present();
+
+    const {role} = await popover.onDidDismiss();
+    switch (role) {
+      case 'manage-categories':
+        await this.presentManageCategoriesPage();
+        break;
+      case 'manage-expenses-for':
+        await this.presentManageTaxExpensesForPage();
+        break;
+      case 'manage-tax-saving-sections':
+        await this.presentManageTaxSavingSectionsPage();
+        break;
+    }
   }
 
   ngOnInit() {
@@ -78,6 +117,54 @@ export class DashboardPage implements OnInit {
   async presentFilter() {
     const modal = await this.modalCtrl.create({
       component: ScheduleFilterPage,
+      swipeToClose: true,
+      presentingElement: this.routerOutlet.nativeEl,
+      componentProps: {excludedTracks: this.excludeTracks}
+    });
+    await modal.present();
+
+    const {data} = await modal.onWillDismiss();
+    if (data) {
+      this.excludeTracks = data;
+      this.updateSchedule();
+    }
+  }
+
+  async presentManageTaxSavingSectionsPage() {
+    const modal = await this.modalCtrl.create({
+      component: ManageTaxSavingSectionsPage,
+      swipeToClose: true,
+      presentingElement: this.routerOutlet.nativeEl,
+      componentProps: {excludedTracks: this.excludeTracks}
+    });
+    await modal.present();
+
+    const {data} = await modal.onWillDismiss();
+    if (data) {
+      this.excludeTracks = data;
+      this.updateSchedule();
+    }
+  }
+
+  async presentManageTaxExpensesForPage() {
+    const modal = await this.modalCtrl.create({
+      component: ManageExpensesForPage,
+      swipeToClose: true,
+      presentingElement: this.routerOutlet.nativeEl,
+      componentProps: {excludedTracks: this.excludeTracks}
+    });
+    await modal.present();
+
+    const {data} = await modal.onWillDismiss();
+    if (data) {
+      this.excludeTracks = data;
+      this.updateSchedule();
+    }
+  }
+
+  async presentManageCategoriesPage() {
+    const modal = await this.modalCtrl.create({
+      component: ManageCategoriesPage,
       swipeToClose: true,
       presentingElement: this.routerOutlet.nativeEl,
       componentProps: {excludedTracks: this.excludeTracks}
@@ -148,14 +235,14 @@ export class DashboardPage implements OnInit {
     await alert.present();
   }
 
-  async openSocial(network: string, fab: HTMLIonFabElement) {
+  async openSocial(network: string, fab: IonFab) {
     const loading = await this.loadingCtrl.create({
       message: `Posting to ${network}`,
       duration: (Math.random() * 1000) + 500
     });
     await loading.present();
     await loading.onWillDismiss();
-    fab.close();
+    await fab.close();
   }
 
   nextMonth() {

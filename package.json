@@ -46,6 +46,7 @@
     "cordova-plugin-whitelist": "^1.3.4",
     "core-js": "^3.6.4",
     "firebase": "^8.6.5",
+    "moment": "^2.29.1",
     "rxfire": "^4.0.0",
     "rxjs": "^6.6.7",
     "sw-toolbox": "3.6.0",

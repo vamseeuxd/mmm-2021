@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { CheckTutorial } from './providers/check-tutorial.service';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {CheckTutorial} from './providers/check-tutorial.service';
 
 const routes: Routes = [
   {
@@ -32,11 +32,27 @@ const routes: Routes = [
     path: 'tutorial',
     loadChildren: () => import('./pages/tutorial/tutorial.module').then(m => m.TutorialModule),
     canLoad: [CheckTutorial]
+  },
+  /*
+  {
+    path: 'manage-categories',
+    loadChildren: () => import('./manage-categories/manage-categories.module').then(m => m.ManageCategoriesPageModule)
+  },
+  {
+    path: 'manage-tax-saving-sections',
+    loadChildren: () => import('./manage-tax-saving-sections/manage-tax-saving-sections.module').then(m => m.ManageTaxSavingSectionsPageModule)
+  },
+  {
+    path: 'manage-expenses-for',
+    loadChildren: () => import('./manage-expenses-for/manage-expenses-for.module').then(m => m.ManageTaxExpensesForPageModule)
   }
+  */
+
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

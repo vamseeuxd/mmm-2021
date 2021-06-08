@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {collectionData} from 'rxfire/firestore';
+import * as moment from 'moment';
 
 export interface ITransaction {
   id: string;
@@ -65,5 +66,14 @@ export class MmmFireService {
       (rv[x[key]] = rv[x[key]] || []).push(x);
       return rv;
     }, {});
+  }
+
+  getRepeatListForTransaction(transaction: ITransaction) {
+    const result = Array.from(Array(transaction.noOfTimesRepeat).keys()).map(value => {
+      const startDate = moment(transaction.repeatStartDate, 'MM/DD/YYYY');
+      startDate.add(value, 'M');
+      return {...transaction, dueDate: startDate.format('MM/DD/YYYY')};
+    });
+    return result;
   }
 }

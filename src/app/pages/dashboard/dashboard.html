@@ -14,13 +14,16 @@
         <ion-icon name="bookmarks-outline"></ion-icon>
       </ion-button>
       <ion-button *ngIf="!showSearchbar" (click)="presentFilter()">
-          <ion-icon slot="icon-only" name="options"></ion-icon>
+        <ion-icon slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!showSearchbar" (click)="showUtilitiesPopover($event)">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar class="type-filter-toolbar">
     <ion-segment mode="md" [(ngModel)]="segment" (ionChange)="updateSchedule()">
-      <ion-segment-button class="ion-no-padding" value="Expenses">Expenses({{transactions.length}})</ion-segment-button>
+      <ion-segment-button class="ion-no-padding" value="Expenses">Expenses</ion-segment-button>
       <ion-segment-button class="ion-no-padding" value="Income">Income</ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -37,8 +40,7 @@
       </ion-button>
     </ion-buttons>
     <ion-title>
-      <ion-datetime class="ion-text-center ion-no-padding" (ionChange)="updateFilteredTransactions()" mode="ios"
-                    [(ngModel)]="selectedDate" displayFormat="MMMM YYYY"></ion-datetime>
+      <ion-datetime class="ion-text-center ion-no-padding" (ionChange)="updateFilteredTransactions()" mode="ios" [(ngModel)]="selectedDate" displayFormat="MMMM YYYY"></ion-datetime>
     </ion-title>
 
   </ion-toolbar>
@@ -54,9 +56,12 @@
   <ion-list #scheduleList [hidden]="transactions.length === 0">
     <ion-item-group *ngFor="let group of transactions">
 
-      <ion-item-divider sticky><ion-label>{{group.dueDate | date : 'fullDate'}}</ion-label></ion-item-divider>
+      <ion-item-divider sticky>
+        <ion-label>{{group.dueDate | date : 'fullDate'}}</ion-label>
+      </ion-item-divider>
 
-      <ion-item-sliding *ngFor="let transaction of group.transactions" #slidingItem [attr.track]="transaction.isPaid | lowercase">
+      <ion-item-sliding *ngFor="let transaction of group.transactions" #slidingItem
+                        [attr.track]="transaction.isPaid | lowercase">
         <!--[attr.track]="transaction.tracks[0] | lowercase">-->
         <!--<ion-item routerLink="/app/tabs/schedule/transaction/{{transaction.id}}">-->
         <ion-item routerLink="/app/tabs/dashboard/transaction/{{transaction.id}}">
@@ -88,7 +93,8 @@
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" #fab>
     <ion-fab-button>
-      <ion-icon name="share-social"></ion-icon>
+      <!--<ion-icon name="share-social"></ion-icon>-->
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
       <ion-fab-button color="vimeo" (click)="openSocial('Vimeo', fab)">

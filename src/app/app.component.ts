@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     {
       title: 'Statistics',
       url: '/app/tabs/statistics',
-      icon: 'statistics'
+      icon: 'stats-chart'
     },
     {
       title: 'Settings',
