@@ -4,18 +4,18 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-segment *ngIf="ios" [(ngModel)]="segment" (ionChange)="updateSchedule()">
-      <ion-segment-button value="all">
-        All
-      </ion-segment-button>
-      <ion-segment-button value="favorites">
-        Favorites
-      </ion-segment-button>
+      <ion-segment-button value="all">Expenses({{transactions.length}})</ion-segment-button>
+      <ion-segment-button value="favorites">Income</ion-segment-button>
     </ion-segment>
-    <ion-title *ngIf="!ios && !showSearchbar">Schedule</ion-title>
-    <ion-searchbar *ngIf="showSearchbar" showCancelButton="always" [(ngModel)]="queryText" (ionChange)="updateSchedule()" (ionCancel)="showSearchbar = false" placeholder="Search"></ion-searchbar>
+    <ion-searchbar *ngIf="showSearchbar" showCancelButton="always" [(ngModel)]="queryText"
+                   (ionChange)="updateSchedule()" (ionCancel)="showSearchbar = false"
+                   placeholder="Search"></ion-searchbar>
     <ion-buttons slot="end">
       <ion-button *ngIf="!ios && !showSearchbar" (click)="showSearchbar = true">
         <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!ios && !showSearchbar">
+        <ion-icon name="bookmarks-outline"></ion-icon>
       </ion-button>
       <ion-button *ngIf="!showSearchbar" (click)="presentFilter()">
         <span *ngIf="ios">Filter</span>
@@ -27,53 +27,69 @@
   </ion-toolbar>
   <ion-toolbar *ngIf="!ios">
     <ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
-      <ion-segment-button value="all">
-        All
-      </ion-segment-button>
-      <ion-segment-button value="favorites">
-        Favorites
-      </ion-segment-button>
+      <ion-segment-button class="ion-no-padding" value="all">Expenses({{transactions.length}})</ion-segment-button>
+      <ion-segment-button class="ion-no-padding" value="favorites">Income</ion-segment-button>
     </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-button class="ion-no-padding" (click)="previousMonth()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button class="ion-no-padding" (click)="nextMonth()">
+        <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-datetime class="ion-text-center ion-no-padding" (ionChange)="updateFilteredTransactions()" mode="ios"
+                    [(ngModel)]="selectedDate" displayFormat="MMM YYYY"></ion-datetime>
+    </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Schedule</ion-title>
-    </ion-toolbar>
-    <ion-toolbar>
       <ion-searchbar [(ngModel)]="queryText" (ionChange)="updateSchedule()" placeholder="Search"></ion-searchbar>
     </ion-toolbar>
   </ion-header>
 
   <ion-list #scheduleList [hidden]="shownSessions === 0">
-    <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">
+    <ion-item-group *ngFor="let group of transactions">
       <ion-item-divider sticky>
         <ion-label>
-          {{group.time}}
+          {{group.dueDate | date : 'fullDate'}}
         </ion-label>
       </ion-item-divider>
 
-      <ion-item-sliding *ngFor="let session of group.sessions" #slidingItem [attr.track]="session.tracks[0] | lowercase"
-        [hidden]="session.hide">
-        <ion-item routerLink="/app/tabs/schedule/session/{{session.id}}">
+      <ion-item-sliding
+        *ngFor="let transaction of group.transactions" #slidingItem
+        [attr.track]="transaction.isPaid | lowercase">
+        <!--[attr.track]="transaction.tracks[0] | lowercase">-->
+        <!--<ion-item routerLink="/app/tabs/schedule/transaction/{{transaction.id}}">-->
+        <ion-item>
           <ion-label>
-            <h3>{{session.name}}</h3>
+            <h3>{{transaction.name}}</h3>
             <p>
-              {{session.timeStart}} &mdash; {{session.timeEnd}}: {{session.location}}
+              <ion-text color="success"><b>{{transaction.amount}}</b></ion-text>
+              <ion-text class="ion-margin-start" color="primary">{{transaction.category}}</ion-text>
             </p>
+            <p>{{transaction.dueDate | date : 'fullDate'}}</p>
           </ion-label>
         </ion-item>
-        <ion-item-options>
-          <ion-item-option color="favorite" (click)="addFavorite(slidingItem, session)" *ngIf="segment === 'all'">
+        <!--<ion-item-options>
+          <ion-item-option color="favorite" (click)="addFavorite(slidingItem, transaction)" *ngIf="segment === 'all'">
             Favorite
           </ion-item-option>
-          <ion-item-option color="danger" (click)="removeFavorite(slidingItem, session, 'Remove Favorite')"
+          <ion-item-option color="danger" (click)="removeFavorite(slidingItem, transaction, 'Remove Favorite')"
             *ngIf="segment === 'favorites'">
             Remove
           </ion-item-option>
-        </ion-item-options>
+        </ion-item-options>-->
       </ion-item-sliding>
     </ion-item-group>
   </ion-list>

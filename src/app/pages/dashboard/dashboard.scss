@@ -24,7 +24,9 @@ $categories: (
   workshop: #69bb7b,
   food: #3bc7c4,
   documentation: #b16be3,
-  navigation: #6600cc
+  navigation: #6600cc,
+  yes: green,
+  no: red,
 );
 
 @each $track, $value in map-remove($categories) {
@@ -32,4 +34,14 @@ $categories: (
     border-left: 2px solid $value;
     padding-left: 10px;
   }
+}
+
+::ng-deep
+ion-segment-button {
+  min-height: 30px;
+  height: 30px;
+}
+
+ion-segment {
+  --min-height: 30px;
 }

@@ -20,7 +20,21 @@ export class MmmFireService {
 
   chitfundsRef = app.firestore().collection('chitfunds');
   chitfunds$ = collectionData(this.chitfundsRef.where('deleted', '==', false));
+  transactions = [];
 
   constructor() {
+    fetch('./assets/data/transaction_list.json')
+      .then(response => response.json())
+      .then(data => {
+        const rv = this.groupDataBy(data, 'dueDate');
+        this.transactions = Object.keys(rv).map(d => ({dueDate: d, transactions: rv[d]}));
+      });
+  }
+
+  groupDataBy(data, key) {
+    return data.reduce((rv, x) => {
+      (rv[x[key]] = rv[x[key]] || []).push(x);
+      return rv;
+    }, {});
   }
 }

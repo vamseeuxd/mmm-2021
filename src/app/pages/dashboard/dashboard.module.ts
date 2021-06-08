@@ -3,23 +3,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { SchedulePage } from './schedule';
+import { DashboardPage } from './dashboard';
 import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
-import { SchedulePageRoutingModule } from './schedule-routing.module';
+import { DashboardPageRoutingModule } from './dashboard-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SchedulePageRoutingModule
+    DashboardPageRoutingModule
   ],
   declarations: [
-    SchedulePage,
+    DashboardPage,
     ScheduleFilterPage
   ],
   entryComponents: [
     ScheduleFilterPage
   ]
 })
-export class ScheduleModule { }
+export class DashboardModule { }

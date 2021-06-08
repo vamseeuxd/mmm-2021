@@ -1,19 +1,20 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController, IonList, IonRouterOutlet, LoadingController, ModalController, ToastController, Config } from '@ionic/angular';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {AlertController, Config, IonList, IonRouterOutlet, LoadingController, ModalController, ToastController} from '@ionic/angular';
 
-import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
-import { ConferenceData } from '../../providers/conference-data';
-import { UserData } from '../../providers/user-data';
+import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
+import {ConferenceData} from '../../providers/conference-data';
+import {UserData} from '../../providers/user-data';
+import {MmmFireService} from '../../services/mmm-fire/mmm-fire.service';
 
 @Component({
-  selector: 'page-schedule',
-  templateUrl: 'schedule.html',
-  styleUrls: ['./schedule.scss'],
+  selector: 'page-dashboard',
+  templateUrl: 'dashboard.html',
+  styleUrls: ['./dashboard.scss'],
 })
-export class SchedulePage implements OnInit {
+export class DashboardPage implements OnInit {
   // Gets a reference to the list element
-  @ViewChild('scheduleList', { static: true }) scheduleList: IonList;
+  @ViewChild('scheduleList', {static: true}) scheduleList: IonList;
 
   ios: boolean;
   dayIndex = 0;
@@ -24,6 +25,8 @@ export class SchedulePage implements OnInit {
   groups: any = [];
   confDate: string;
   showSearchbar: boolean;
+  selectedDate = '05/06/2021';
+  transactions = [];
 
   constructor(
     public alertCtrl: AlertController,
@@ -34,17 +37,19 @@ export class SchedulePage implements OnInit {
     public routerOutlet: IonRouterOutlet,
     public toastCtrl: ToastController,
     public user: UserData,
+    public mmmFireService: MmmFireService,
     public config: Config
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.updateSchedule();
-
     this.ios = this.config.get('mode') === 'ios';
+    this.updateFilteredTransactions();
   }
 
   updateSchedule() {
-    // Close any open sliding items when the schedule updates
+    // Close any open sliding items when the dashboard updates
     if (this.scheduleList) {
       this.scheduleList.closeSlidingItems();
     }
@@ -55,16 +60,26 @@ export class SchedulePage implements OnInit {
     });
   }
 
+  updateFilteredTransactions() {
+    this.transactions = this.mmmFireService.transactions.filter(d => {
+      const dueDate = new Date(d.dueDate);
+      const selectedDate = new Date(this.selectedDate.split('T')[0]);
+      dueDate.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+      return dueDate.getMonth() === selectedDate.getMonth() && dueDate.getFullYear() === selectedDate.getFullYear();
+    });
+  }
+
   async presentFilter() {
     const modal = await this.modalCtrl.create({
       component: ScheduleFilterPage,
       swipeToClose: true,
       presentingElement: this.routerOutlet.nativeEl,
-      componentProps: { excludedTracks: this.excludeTracks }
+      componentProps: {excludedTracks: this.excludeTracks}
     });
     await modal.present();
 
-    const { data } = await modal.onWillDismiss();
+    const {data} = await modal.onWillDismiss();
     if (data) {
       this.excludeTracks = data;
       this.updateSchedule();
@@ -136,5 +151,27 @@ export class SchedulePage implements OnInit {
     await loading.present();
     await loading.onWillDismiss();
     fab.close();
+  }
+
+  nextMonth() {
+    const now = new Date(this.selectedDate);
+    if (now.getMonth() === 11) {
+      const current = new Date(now.getFullYear() + 1, 0, 1);
+      this.selectedDate = current.toISOString();
+    } else {
+      const current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      this.selectedDate = current.toISOString();
+    }
+  }
+
+  previousMonth() {
+    const now = new Date(this.selectedDate);
+    if (now.getMonth() === 0) {
+      const current = new Date(now.getFullYear() - 1, 11, 31);
+      this.selectedDate = current.toISOString();
+    } else {
+      const current = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      this.selectedDate = current.toISOString();
+    }
   }
 }
