@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ionic serve --external --disableHostCheck",
-    "start-l": "ionic serve --lab",
+    "start-l": "ionic serve --external --lab",
     "start1": "ng serve",
     "build": "ng build",
     "test": "ng test",

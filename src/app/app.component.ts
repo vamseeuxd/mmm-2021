@@ -21,8 +21,8 @@ import {MmmFireService} from './services/mmm-fire/mmm-fire.service';
 export class AppComponent implements OnInit {
   appPages = [
     {
-      title: 'Schedule',
-      url: '/app/tabs/schedule',
+      title: 'Dashboard',
+      url: '/app/tabs/dashboard',
       icon: 'calendar'
     },
     {

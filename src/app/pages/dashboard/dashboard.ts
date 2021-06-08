@@ -155,23 +155,23 @@ export class DashboardPage implements OnInit {
 
   nextMonth() {
     const now = new Date(this.selectedDate);
+    let current;
     if (now.getMonth() === 11) {
-      const current = new Date(now.getFullYear() + 1, 0, 1);
-      this.selectedDate = current.toISOString();
+      current = new Date(now.getFullYear() + 1, 0, 1);
     } else {
-      const current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-      this.selectedDate = current.toISOString();
+      current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     }
+    this.selectedDate = `${current.getMonth() + 1}/${current.getDate()}/${current.getFullYear()}`;
   }
 
   previousMonth() {
     const now = new Date(this.selectedDate);
+    let current;
     if (now.getMonth() === 0) {
-      const current = new Date(now.getFullYear() - 1, 11, 31);
-      this.selectedDate = current.toISOString();
+      current = new Date(now.getFullYear() - 1, 11, 31);
     } else {
-      const current = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      this.selectedDate = current.toISOString();
+      current = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     }
+    this.selectedDate = `${current.getMonth() + 1}/${current.getDate()}/${current.getFullYear()}`;
   }
 }
