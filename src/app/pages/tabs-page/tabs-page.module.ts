@@ -5,23 +5,23 @@ import { IonicModule } from '@ionic/angular';
 import { TabsPage } from './tabs-page';
 import { TabsPageRoutingModule } from './tabs-page-routing.module';
 
-import { AboutModule } from '../about/about.module';
-import { MapModule } from '../map/map.module';
+import { SettingsModule } from '../settings/settings.module';
+import { StatisticsModule } from '../statistics/statistics.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
-import { SessionDetailModule } from '../session-detail/session-detail.module';
-import { SpeakerDetailModule } from '../speaker-detail/speaker-detail.module';
-import { SpeakerListModule } from '../speaker-list/speaker-list.module';
+import { TransactionDetailModule } from '../transaction-detail/transaction-detail.module';
+import { AccountDetailModule } from '../account-detail/account-detail.module';
+import { AccountListModule } from '../account-list/account-list.module';
 
 @NgModule({
   imports: [
-    AboutModule,
+    SettingsModule,
     CommonModule,
     IonicModule,
-    MapModule,
+    StatisticsModule,
     DashboardModule,
-    SessionDetailModule,
-    SpeakerDetailModule,
-    SpeakerListModule,
+    TransactionDetailModule,
+    AccountDetailModule,
+    AccountListModule,
     TabsPageRoutingModule
   ],
   declarations: [

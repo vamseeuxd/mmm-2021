@@ -25,25 +25,25 @@ export class ConferenceData {
 
   processData(data: any) {
     // just some good 'ol JS fun with objects and arrays
-    // build up the data by linking speakers to sessions
+    // build up the data by linking accounts to transactions
     this.data = data;
 
     // loop through each day in the dashboard
     this.data.schedule.forEach((day: any) => {
       // loop through each timeline group in the day
       day.groups.forEach((group: any) => {
-        // loop through each session in the timeline group
-        group.sessions.forEach((session: any) => {
-          session.speakers = [];
-          if (session.speakerNames) {
-            session.speakerNames.forEach((speakerName: any) => {
-              const speaker = this.data.speakers.find(
+        // loop through each transaction in the timeline group
+        group.transactions.forEach((transaction: any) => {
+          transaction.accounts = [];
+          if (transaction.speakerNames) {
+            transaction.speakerNames.forEach((speakerName: any) => {
+              const account = this.data.accounts.find(
                 (s: any) => s.name === speakerName
               );
-              if (speaker) {
-                session.speakers.push(speaker);
-                speaker.sessions = speaker.sessions || [];
-                speaker.sessions.push(session);
+              if (account) {
+                transaction.accounts.push(account);
+                account.transactions = account.transactions || [];
+                account.transactions.push(transaction);
               }
             });
           }
@@ -63,7 +63,7 @@ export class ConferenceData {
     return this.load().pipe(
       map((data: any) => {
         const day = data.schedule[dayIndex];
-        day.shownSessions = 0;
+        day.shownTransactions = 0;
 
         queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
         const queryWords = queryText.split(' ').filter(w => !!w.trim().length);
@@ -71,14 +71,14 @@ export class ConferenceData {
         day.groups.forEach((group: any) => {
           group.hide = true;
 
-          group.sessions.forEach((session: any) => {
-            // check if this session should show or not
-            this.filterSession(session, queryWords, excludeTracks, segment);
+          group.transactions.forEach((transaction: any) => {
+            // check if this transaction should show or not
+            this.filterTransaction(transaction, queryWords, excludeTracks, segment);
 
-            if (!session.hide) {
-              // if this session is not hidden then this group should show
+            if (!transaction.hide) {
+              // if this transaction is not hidden then this group should show
               group.hide = false;
-              day.shownSessions++;
+              day.shownTransactions++;
             }
           });
         });
@@ -88,39 +88,39 @@ export class ConferenceData {
     );
   }
 
-  filterSession(
-    session: any,
+  filterTransaction(
+    transaction: any,
     queryWords: string[],
     excludeTracks: any[],
     segment: string
   ) {
     let matchesQueryText = false;
     if (queryWords.length) {
-      // of any query word is in the session name than it passes the query test
+      // of any query word is in the transaction name than it passes the query test
       queryWords.forEach((queryWord: string) => {
-        if (session.name.toLowerCase().indexOf(queryWord) > -1) {
+        if (transaction.name.toLowerCase().indexOf(queryWord) > -1) {
           matchesQueryText = true;
         }
       });
     } else {
-      // if there are no query words then this session passes the query test
+      // if there are no query words then this transaction passes the query test
       matchesQueryText = true;
     }
 
-    // if any of the sessions tracks are not in the
-    // exclude tracks then this session passes the track test
+    // if any of the transactions tracks are not in the
+    // exclude tracks then this transaction passes the track test
     let matchesTracks = false;
-    session.tracks.forEach((trackName: string) => {
+    transaction.tracks.forEach((trackName: string) => {
       if (excludeTracks.indexOf(trackName) === -1) {
         matchesTracks = true;
       }
     });
 
-    // if the segment is 'favorites', but session is not a user favorite
-    // then this session does not pass the segment test
+    // if the segment is 'favorites', but transaction is not a user favorite
+    // then this transaction does not pass the segment test
     let matchesSegment = false;
     if (segment === 'favorites') {
-      if (this.user.hasFavorite(session.name)) {
+      if (this.user.hasFavorite(transaction.name)) {
         matchesSegment = true;
       }
     } else {
@@ -128,13 +128,13 @@ export class ConferenceData {
     }
 
     // all tests must be true if it should not be hidden
-    session.hide = !(matchesQueryText && matchesTracks && matchesSegment);
+    transaction.hide = !(matchesQueryText && matchesTracks && matchesSegment);
   }
 
   getSpeakers() {
     return this.load().pipe(
       map((data: any) => {
-        return data.speakers.sort((a: any, b: any) => {
+        return data.accounts.sort((a: any, b: any) => {
           const aName = a.name.split(' ').pop();
           const bName = b.name.split(' ').pop();
           return aName.localeCompare(bName);

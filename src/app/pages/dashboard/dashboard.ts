@@ -21,7 +21,7 @@ export class DashboardPage implements OnInit {
   queryText = '';
   segment = 'all';
   excludeTracks: any = [];
-  shownSessions: any = [];
+  shownTransactions: any = [];
   groups: any = [];
   confDate: string;
   showSearchbar: boolean;
@@ -55,7 +55,7 @@ export class DashboardPage implements OnInit {
     }
 
     this.confData.getTimeline(this.dayIndex, this.queryText, this.excludeTracks, this.segment).subscribe((data: any) => {
-      this.shownSessions = data.shownSessions;
+      this.shownTransactions = data.shownTransactions;
       this.groups = data.groups;
     });
   }
@@ -86,20 +86,20 @@ export class DashboardPage implements OnInit {
     }
   }
 
-  async addFavorite(slidingItem: HTMLIonItemSlidingElement, sessionData: any) {
-    if (this.user.hasFavorite(sessionData.name)) {
+  async addFavorite(slidingItem: HTMLIonItemSlidingElement, transactionData: any) {
+    if (this.user.hasFavorite(transactionData.name)) {
       // Prompt to remove favorite
-      this.removeFavorite(slidingItem, sessionData, 'Favorite already added');
+      this.removeFavorite(slidingItem, transactionData, 'Favorite already added');
     } else {
       // Add as a favorite
-      this.user.addFavorite(sessionData.name);
+      this.user.addFavorite(transactionData.name);
 
       // Close the open item
       slidingItem.close();
 
       // Create a toast
       const toast = await this.toastCtrl.create({
-        header: `${sessionData.name} was successfully added as a favorite.`,
+        header: `${transactionData.name} was successfully added as a favorite.`,
         duration: 3000,
         buttons: [{
           text: 'Close',
@@ -113,15 +113,15 @@ export class DashboardPage implements OnInit {
 
   }
 
-  async removeFavorite(slidingItem: HTMLIonItemSlidingElement, sessionData: any, title: string) {
+  async removeFavorite(slidingItem: HTMLIonItemSlidingElement, transactionData: any, title: string) {
     const alert = await this.alertCtrl.create({
       header: title,
-      message: 'Would you like to remove this session from your favorites?',
+      message: 'Would you like to remove this transaction from your favorites?',
       buttons: [
         {
           text: 'Cancel',
           handler: () => {
-            // they clicked the cancel button, do not remove the session
+            // they clicked the cancel button, do not remove the transaction
             // close the sliding item and hide the option buttons
             slidingItem.close();
           }
@@ -129,8 +129,8 @@ export class DashboardPage implements OnInit {
         {
           text: 'Remove',
           handler: () => {
-            // they want to remove this session from their favorites
-            this.user.removeFavorite(sessionData.name);
+            // they want to remove this transaction from their favorites
+            this.user.removeFavorite(transactionData.name);
             this.updateSchedule();
 
             // close the sliding item and hide the option buttons

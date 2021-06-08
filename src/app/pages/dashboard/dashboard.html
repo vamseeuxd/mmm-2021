@@ -51,7 +51,7 @@
     </ion-toolbar>
   </ion-header>-->
 
-  <ion-list #scheduleList [hidden]="shownSessions === 0">
+  <ion-list #scheduleList [hidden]="shownTransactions === 0">
     <ion-item-group *ngFor="let group of transactions">
       <ion-item-divider sticky>
         <ion-label>
@@ -64,7 +64,7 @@
         [attr.track]="transaction.isPaid | lowercase">
         <!--[attr.track]="transaction.tracks[0] | lowercase">-->
         <!--<ion-item routerLink="/app/tabs/schedule/transaction/{{transaction.id}}">-->
-        <ion-item>
+        <ion-item routerLink="/app/tabs/dashboard/transaction/{{transaction.id}}">
           <ion-label>
             <h3>{{transaction.name}}</h3>
             <p>
@@ -87,8 +87,8 @@
     </ion-item-group>
   </ion-list>
 
-  <ion-list-header [hidden]="shownSessions > 0">
-    No Sessions Found
+  <ion-list-header [hidden]="shownTransactions > 0">
+    No Transactions Found
   </ion-list-header>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" #fab>

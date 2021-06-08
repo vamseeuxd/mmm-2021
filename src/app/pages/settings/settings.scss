@@ -15,14 +15,14 @@ ion-toolbar ion-menu-button {
   --color: white;
 }
 
-.about-header {
+.settings-header {
   position: relative;
 
   width: 100%;
   height: 30%;
 }
 
-.about-header .about-image {
+.settings-header .settings-image {
   position: absolute;
 
   top: 0;
@@ -39,41 +39,41 @@ ion-toolbar ion-menu-button {
   transition: opacity 500ms ease-in-out;
 }
 
-.about-header .madison {
+.settings-header .madison {
   background-image: url(/assets/img/about/madison.jpg);
 }
-.about-header .austin {
+.settings-header .austin {
   background-image: url(/assets/img/about/austin.jpg);
 }
-.about-header .chicago {
+.settings-header .chicago {
   background-image: url(/assets/img/about/chicago.jpg);
 }
-.about-header .seattle {
+.settings-header .seattle {
   background-image: url(/assets/img/about/seattle.jpg);
 }
 
-.about-info {
+.settings-info {
   position: absolute;
   margin-top: -10px;
   border-radius: 10px;
   background: var(--ion-background-color, #fff);
 }
 
-.about-info h3 {
+.settings-info h3 {
   margin-top: 0;
 }
 
-.about-info ion-list {
+.settings-info ion-list {
   padding-top: 0;
 }
 
-.about-info p {
+.settings-info p {
   line-height: 130%;
 
   color: var(--ion-color-dark);
 }
 
-.about-info ion-icon {
+.settings-info ion-icon {
   margin-inline-end: 32px;
 }
 
@@ -81,10 +81,10 @@ ion-toolbar ion-menu-button {
  * iOS Only
  */
 
-.ios .about-info {
+.ios .settings-info {
   --ion-padding: 19px;
 }
 
-.ios .about-info h3 {
+.ios .settings-info h3 {
   font-weight: 700;
 }
