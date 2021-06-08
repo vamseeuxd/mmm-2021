@@ -20,6 +20,7 @@ export class MmmFireService {
 
   chitfundsRef = app.firestore().collection('chitfunds');
   chitfunds$ = collectionData(this.chitfundsRef.where('deleted', '==', false));
+  transactionsGroupedByDueDate = [];
   transactions = [];
 
   constructor() {
@@ -27,7 +28,8 @@ export class MmmFireService {
       .then(response => response.json())
       .then(data => {
         const rv = this.groupDataBy(data, 'dueDate');
-        this.transactions = Object.keys(rv).map(d => ({dueDate: d, transactions: rv[d]}));
+        this.transactions = data;
+        this.transactionsGroupedByDueDate = Object.keys(rv).map(d => ({dueDate: d, transactions: rv[d]}));
       });
   }
 

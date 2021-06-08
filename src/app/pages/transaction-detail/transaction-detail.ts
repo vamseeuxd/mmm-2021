@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
-import { ConferenceData } from '../../providers/conference-data';
-import { ActivatedRoute } from '@angular/router';
-import { UserData } from '../../providers/user-data';
+import {ConferenceData} from '../../providers/conference-data';
+import {ActivatedRoute} from '@angular/router';
+import {UserData} from '../../providers/user-data';
+import {MmmFireService} from '../../services/mmm-fire/mmm-fire.service';
 
 @Component({
   selector: 'page-transaction-detail',
@@ -17,14 +18,19 @@ export class TransactionDetailPage {
   constructor(
     private dataProvider: ConferenceData,
     private userProvider: UserData,
+    public mmmFireService: MmmFireService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+  }
 
   ionViewWillEnter() {
     this.dataProvider.load().subscribe((data: any) => {
       if (data && data.schedule && data.schedule[0] && data.schedule[0].groups) {
         const transactionId = this.route.snapshot.paramMap.get('transactionId');
-        for (const group of data.schedule[0].groups) {
+        // console.log(this.mmmFireService.transactions, transactionId);
+        this.transaction = this.mmmFireService.transactions.find(d => d.id === transactionId);
+        // console.log(this.transaction);
+        /*for (const group of data.schedule[0].groups) {
           if (group && group.transactions) {
             for (const transaction of group.transactions) {
               if (transaction && transaction.id === transactionId) {
@@ -38,7 +44,7 @@ export class TransactionDetailPage {
               }
             }
           }
-        }
+        }*/
       }
     });
   }

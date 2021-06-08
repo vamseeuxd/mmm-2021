@@ -61,7 +61,7 @@ export class DashboardPage implements OnInit {
   }
 
   updateFilteredTransactions() {
-    this.transactions = this.mmmFireService.transactions.filter(d => {
+    this.transactions = this.mmmFireService.transactionsGroupedByDueDate.filter(d => {
       const dueDate = new Date(d.dueDate);
       const selectedDate = new Date(this.selectedDate.split('T')[0]);
       dueDate.setHours(0, 0, 0, 0);
