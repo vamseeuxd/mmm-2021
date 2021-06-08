@@ -5,7 +5,7 @@ import {AlertController, Config, IonList, IonRouterOutlet, LoadingController, Mo
 import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
 import {ConferenceData} from '../../providers/conference-data';
 import {UserData} from '../../providers/user-data';
-import {MmmFireService} from '../../services/mmm-fire/mmm-fire.service';
+import {ITransactionGroup, MmmFireService} from '../../services/mmm-fire/mmm-fire.service';
 
 @Component({
   selector: 'page-dashboard',
@@ -19,7 +19,7 @@ export class DashboardPage implements OnInit {
   ios: boolean;
   dayIndex = 0;
   queryText = '';
-  segment = 'all';
+  segment = 'Expenses';
   excludeTracks: any = [];
   shownTransactions: any = [];
   groups: any = [];
@@ -50,24 +50,29 @@ export class DashboardPage implements OnInit {
 
   updateSchedule() {
     // Close any open sliding items when the dashboard updates
-    if (this.scheduleList) {
+    /*if (this.scheduleList) {
       this.scheduleList.closeSlidingItems();
     }
 
     this.confData.getTimeline(this.dayIndex, this.queryText, this.excludeTracks, this.segment).subscribe((data: any) => {
       this.shownTransactions = data.shownTransactions;
       this.groups = data.groups;
-    });
+    });*/
+    this.updateFilteredTransactions();
   }
 
   updateFilteredTransactions() {
-    this.transactions = this.mmmFireService.transactionsGroupedByDueDate.filter(d => {
+    this.transactions = this.mmmFireService.transactionsGroupedByDueDate.filter((d: ITransactionGroup) => {
       const dueDate = new Date(d.dueDate);
       const selectedDate = new Date(this.selectedDate.split('T')[0]);
       dueDate.setHours(0, 0, 0, 0);
       selectedDate.setHours(0, 0, 0, 0);
       return dueDate.getMonth() === selectedDate.getMonth() && dueDate.getFullYear() === selectedDate.getFullYear();
-    });
+    }).map((value: ITransactionGroup) => {
+      const transactions = value.transactions.filter(d => d.type === this.segment);
+      const returnValue: ITransactionGroup = {dueDate: value.dueDate, transactions};
+      return returnValue;
+    }).filter(d => d.transactions.length > 0);
   }
 
   async presentFilter() {

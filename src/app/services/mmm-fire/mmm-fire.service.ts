@@ -3,6 +3,33 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {collectionData} from 'rxfire/firestore';
 
+export interface ITransaction {
+  id: string;
+  amount: string;
+  amountPaid: string;
+  paymentRemarks: string;
+  dueDate: string;
+  paidFrom: string;
+  isPaid: string;
+  remarks: string;
+  paidOn: string;
+  type: string;
+  for: string;
+  category: string;
+  taxSavingSection: string;
+  repeat: string;
+  noOfTimesRepeat: number;
+  repeatStartDate: string;
+  isTaxSavings: string;
+  name: string;
+}
+
+
+export interface ITransactionGroup {
+  dueDate: string;
+  transactions: any[];
+}
+
 const app = firebase.initializeApp({
   apiKey: 'AIzaSyDRsu6s4hY7H837ZxpqOPEMM8rQBfoedEk',
   authDomain: 'monthly-money-manager-7c461.firebaseapp.com',
@@ -20,8 +47,8 @@ export class MmmFireService {
 
   chitfundsRef = app.firestore().collection('chitfunds');
   chitfunds$ = collectionData(this.chitfundsRef.where('deleted', '==', false));
-  transactionsGroupedByDueDate = [];
-  transactions = [];
+  transactionsGroupedByDueDate: ITransactionGroup[] = [];
+  transactions: ITransaction[] = [];
 
   constructor() {
     fetch('./assets/data/transaction_list.json')

@@ -20,8 +20,8 @@
   </ion-toolbar>
   <ion-toolbar class="type-filter-toolbar">
     <ion-segment mode="md" [(ngModel)]="segment" (ionChange)="updateSchedule()">
-      <ion-segment-button class="ion-no-padding" value="all">Expenses({{transactions.length}})</ion-segment-button>
-      <ion-segment-button class="ion-no-padding" value="favorites">Income</ion-segment-button>
+      <ion-segment-button class="ion-no-padding" value="Expenses">Expenses({{transactions.length}})</ion-segment-button>
+      <ion-segment-button class="ion-no-padding" value="Income">Income</ion-segment-button>
     </ion-segment>
   </ion-toolbar>
   <ion-toolbar>
@@ -51,17 +51,12 @@
     </ion-toolbar>
   </ion-header>-->
 
-  <ion-list #scheduleList [hidden]="shownTransactions === 0">
+  <ion-list #scheduleList [hidden]="transactions.length === 0">
     <ion-item-group *ngFor="let group of transactions">
-      <ion-item-divider sticky>
-        <ion-label>
-          {{group.dueDate | date : 'fullDate'}}
-        </ion-label>
-      </ion-item-divider>
 
-      <ion-item-sliding
-        *ngFor="let transaction of group.transactions" #slidingItem
-        [attr.track]="transaction.isPaid | lowercase">
+      <ion-item-divider sticky><ion-label>{{group.dueDate | date : 'fullDate'}}</ion-label></ion-item-divider>
+
+      <ion-item-sliding *ngFor="let transaction of group.transactions" #slidingItem [attr.track]="transaction.isPaid | lowercase">
         <!--[attr.track]="transaction.tracks[0] | lowercase">-->
         <!--<ion-item routerLink="/app/tabs/schedule/transaction/{{transaction.id}}">-->
         <ion-item routerLink="/app/tabs/dashboard/transaction/{{transaction.id}}">
@@ -87,7 +82,7 @@
     </ion-item-group>
   </ion-list>
 
-  <ion-list-header [hidden]="shownTransactions > 0">
+  <ion-list-header [hidden]="transactions.length > 0">
     No Transactions Found
   </ion-list-header>
 
