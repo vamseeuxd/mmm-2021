@@ -1,0 +1,86 @@
+.transaction-track-ionic {
+  color: var(--ion-color-primary);
+}
+
+.transaction-track-angular {
+  color: var(--ion-color-angular);
+}
+
+.transaction-track-communication {
+  color: var(--ion-color-communication);
+}
+
+.transaction-track-tooling {
+  color: var(--ion-color-tooling);
+}
+
+.transaction-track-services {
+  color: var(--ion-color-services);
+}
+
+.transaction-track-design {
+  color: var(--ion-color-design);
+}
+
+.transaction-track-workshop {
+  color: var(--ion-color-workshop);
+}
+
+.transaction-track-food {
+  color: var(--ion-color-food);
+}
+
+.transaction-track-documentation {
+  color: var(--ion-color-documentation);
+}
+
+.transaction-track-navigation {
+  color: var(--ion-color-navigation);
+}
+
+/* Favorite Icon
+ * --------------------------------------------------------
+ */
+
+.show-favorite {
+  position: relative;
+}
+
+.icon-heart-empty,
+.icon-heart {
+  --border-radius: 50%;
+  --padding-start: 0;
+  --padding-end: 0;
+
+  position: absolute;
+
+  top: 5px;
+  right: 5px;
+
+  width: 48px;
+  height: 48px;
+
+  font-size: 16px;
+
+  transition: transform 300ms ease;
+}
+
+.icon-heart-empty {
+  transform: scale(1);
+}
+
+.icon-heart {
+  transform: scale(0);
+}
+
+.show-favorite .icon-heart {
+  transform: scale(1);
+}
+
+.show-favorite .icon-heart-empty {
+  transform: scale(0);
+}
+
+h1 {
+  margin: 0;
+}

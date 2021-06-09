@@ -1,0 +1,90 @@
+ion-toolbar {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  --background: transparent;
+  --color: white;
+}
+
+ion-toolbar ion-button,
+ion-toolbar ion-back-button,
+ion-toolbar ion-menu-button {
+  --color: white;
+}
+
+.settings-header {
+  position: relative;
+
+  width: 100%;
+  height: 30%;
+}
+
+.settings-header .settings-image {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  opacity: 0;
+
+  transition: opacity 500ms ease-in-out;
+}
+
+.settings-header .madison {
+  background-image: url(/assets/img/about/madison.jpg);
+}
+.settings-header .austin {
+  background-image: url(/assets/img/about/austin.jpg);
+}
+.settings-header .chicago {
+  background-image: url(/assets/img/about/chicago.jpg);
+}
+.settings-header .seattle {
+  background-image: url(/assets/img/about/seattle.jpg);
+}
+
+.settings-info {
+  position: absolute;
+  margin-top: -10px;
+  border-radius: 10px;
+  background: var(--ion-background-color, #fff);
+}
+
+.settings-info h3 {
+  margin-top: 0;
+}
+
+.settings-info ion-list {
+  padding-top: 0;
+}
+
+.settings-info p {
+  line-height: 130%;
+
+  color: var(--ion-color-dark);
+}
+
+.settings-info ion-icon {
+  margin-inline-end: 32px;
+}
+
+/*
+ * iOS Only
+ */
+
+.ios .settings-info {
+  --ion-padding: 19px;
+}
+
+.ios .settings-info h3 {
+  font-weight: 700;
+}

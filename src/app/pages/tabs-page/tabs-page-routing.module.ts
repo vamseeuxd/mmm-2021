@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs-page';
-import { SchedulePage } from '../schedule/schedule';
+import { DashboardPage } from '../dashboard/dashboard';
 
 
 const routes: Routes = [
@@ -10,56 +10,56 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'schedule',
+        path: 'dashboard',
         children: [
           {
             path: '',
-            component: SchedulePage,
+            component: DashboardPage,
           },
           {
-            path: 'session/:sessionId',
-            loadChildren: () => import('../session-detail/session-detail.module').then(m => m.SessionDetailModule)
+            path: 'transaction/:transactionId',
+            loadChildren: () => import('../transaction-detail/transaction-detail.module').then(m => m.TransactionDetailModule)
           }
         ]
       },
       {
-        path: 'speakers',
+        path: 'accounts',
         children: [
           {
             path: '',
-            loadChildren: () => import('../speaker-list/speaker-list.module').then(m => m.SpeakerListModule)
+            loadChildren: () => import('../account-list/account-list.module').then(m => m.AccountListModule)
           },
           {
-            path: 'session/:sessionId',
-            loadChildren: () => import('../session-detail/session-detail.module').then(m => m.SessionDetailModule)
+            path: 'transaction/:transactionId',
+            loadChildren: () => import('../transaction-detail/transaction-detail.module').then(m => m.TransactionDetailModule)
           },
           {
-            path: 'speaker-details/:speakerId',
-            loadChildren: () => import('../speaker-detail/speaker-detail.module').then(m => m.SpeakerDetailModule)
+            path: 'account-details/:speakerId',
+            loadChildren: () => import('../account-detail/account-detail.module').then(m => m.AccountDetailModule)
           }
         ]
       },
       {
-        path: 'map',
+        path: 'statistics',
         children: [
           {
             path: '',
-            loadChildren: () => import('../map/map.module').then(m => m.MapModule)
+            loadChildren: () => import('../statistics/statistics.module').then(m => m.StatisticsModule)
           }
         ]
       },
       {
-        path: 'about',
+        path: 'settings',
         children: [
           {
             path: '',
-            loadChildren: () => import('../about/about.module').then(m => m.AboutModule)
+            loadChildren: () => import('../settings/settings.module').then(m => m.SettingsModule)
           }
         ]
       },
       {
         path: '',
-        redirectTo: '/app/tabs/schedule',
+        redirectTo: '/app/tabs/dashboard',
         pathMatch: 'full'
       }
     ]

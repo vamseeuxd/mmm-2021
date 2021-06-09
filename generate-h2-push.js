@@ -5,7 +5,7 @@ const args = process.argv.slice(2);
 const host = args[0] || 'http://127.0.0.1:8080';
 const indexMatches = [
   '.gz',
-  '.map',
+  '.statistics',
   '3rdpartylicenses.txt',
   'ngsw-manifest.json',
   'ngsw.json',
@@ -42,7 +42,7 @@ async function main() {
       if (url.indexOf(exlude) != -1) return false;
     }
 
-    // if external, dont worry about it for now
+    // if external, dont worry settings it for now
     //
     const origin = new URL(host);
 
