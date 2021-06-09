@@ -24,6 +24,7 @@ export class MmmFireService {
 
   chitfundsRef = app.firestore().collection('chitfunds');
   chitfunds$ = collectionData(this.chitfundsRef.where('deleted', '==', false));
+
   transactionsGroupedByDueDate: ITransactionGroup[] = [];
   transactions: ITransaction[] = [];
 
