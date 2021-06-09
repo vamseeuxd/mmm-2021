@@ -1,13 +1,8 @@
 <ion-header mode="ios">
   <ion-toolbar mode="ios">
-
     <ion-title>
       Manage Categories
     </ion-title>
-
-    <ion-buttons slot="end">
-      <ion-button mode="ios" (click)="dismiss()" strong>close</ion-button>
-    </ion-buttons>
   </ion-toolbar>
 
   <ion-toolbar mode="ios">
@@ -28,7 +23,8 @@
     <!--<ion-list-header>
     </ion-list-header>-->
     <ion-item *ngFor="let category of filteredCategories">
-      <ion-button (click)="presentAlertPrompt('Edit Category', category)" [hidden]="category.default" mode="ios" color="medium" slot="end">
+      <ion-button (click)="presentAlertPrompt('Edit Category', category)" [hidden]="category.default" mode="ios"
+                  color="medium" slot="end">
         <ion-icon mode="ios" name="create"></ion-icon>
       </ion-button>
       <ion-button (click)="deleteCategory(category)" [hidden]="category.default" mode="ios" color="danger" slot="end">
@@ -39,11 +35,26 @@
   </ion-list>
 
 
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <!--<ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="presentAlertPrompt('Add New Category')">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab>-->
 
 </ion-content>
+<ion-footer mode="ios">
+  <ion-toolbar mode="ios" class="ion-padding-horizontal">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="start" name="close"></ion-icon>
+        close
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentAlertPrompt('Add New Category')">
+        <ion-icon slot="start" name="add"></ion-icon>
+        Add
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
