@@ -9,7 +9,7 @@
     "start": "ionic serve --external --disableHostCheck",
     "start-l": "ionic serve --external --lab",
     "start1": "ng serve",
-    "build": "ng build --prod",
+    "build": "ng build --configuration production",
     "deploy": "firebase deploy",
     "test": "ng test",
     "lint": "ng lint",

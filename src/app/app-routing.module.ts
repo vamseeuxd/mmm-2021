@@ -33,25 +33,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/tutorial/tutorial.module').then(m => m.TutorialModule),
     canLoad: [CheckTutorial]
   },
-  /*
-  {
-    path: 'manage-categories',
-    loadChildren: () => import('./manage-categories/manage-categories.module').then(m => m.ManageCategoriesPageModule)
-  },
-  {
-    path: 'manage-tax-saving-sections',
-    loadChildren: () => import('./manage-tax-saving-sections/manage-tax-saving-sections.module').then(m => m.ManageTaxSavingSectionsPageModule)
-  },
-  {
-    path: 'manage-expenses-for',
-    loadChildren: () => import('./manage-expenses-for/manage-expenses-for.module').then(m => m.ManageTaxExpensesForPageModule)
-  }
-  */
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
