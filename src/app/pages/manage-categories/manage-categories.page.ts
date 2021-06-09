@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
-import {ConferenceData} from '../../providers/conference-data';
-import {Config, ModalController, NavParams} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, NavParams, ToastController} from '@ionic/angular';
+import {CategoriesService, ICategory} from '../../services/categories/categories.service';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
+import {Subscription} from 'rxjs/src/internal/Subscription';
 
 @Component({
   selector: 'app-manage-categories',
@@ -9,52 +12,142 @@ import {Config, ModalController, NavParams} from '@ionic/angular';
 })
 export class ManageCategoriesPage {
 
-  ios: boolean;
-
-  tracks: { name: string, icon: string, isChecked: boolean }[] = [];
+  searchTextAction: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  searchText$: Observable<string> = this.searchTextAction.asObservable();
+  categories$: Observable<ICategory[]>;
+  categories: ICategory[] = [];
+  private categoriesSubscription: Subscription;
+  private loadingScreen: HTMLIonLoadingElement;
 
   constructor(
-    public confData: ConferenceData,
-    private config: Config,
+    public categoriesService: CategoriesService,
     public modalCtrl: ModalController,
+    public loadingCtrl: LoadingController,
+    public toastCtrl: ToastController,
+    public alertController: AlertController,
     public navParams: NavParams
   ) {
+    this.showLoadingScreen();
+  }
+
+  async showLoadingScreen() {
+    this.loadingScreen = await this.loadingCtrl.create({
+      message: `Please wait`,
+      duration: null
+    });
+    await this.loadingScreen.present();
   }
 
   ionViewWillEnter() {
-    this.ios = this.config.get('mode') === `ios`;
-
-    // passed in array of track names that should be excluded (unchecked)
-    const excludedTrackNames = this.navParams.get('excludedTracks');
-
-    this.confData.getTracks().subscribe((tracks: any[]) => {
-      tracks.forEach(track => {
-        this.tracks.push({
-          name: track.name,
-          icon: track.icon,
-          isChecked: (excludedTrackNames.indexOf(track.name) === -1)
-        });
-      });
+    this.categories$ = combineLatest(this.categoriesService.categories$, this.searchText$).pipe(
+      switchMap(value => {
+        return of(value[0].filter(d => {
+          return d.label.trim().toLowerCase().indexOf(value[1].trim().toLowerCase()) >= 0;
+        }));
+      })
+    );
+    // @ts-ignore
+    this.categoriesSubscription = this.categoriesService.categories$.subscribe(value => {
+      this.categories = value;
+      this.loadingScreen.dismiss();
     });
   }
 
-  selectAll(check: boolean) {
-    // set all to checked or unchecked
-    this.tracks.forEach(track => {
-      track.isChecked = check;
+  ionViewDidLeave() {
+    this.categoriesSubscription.unsubscribe();
+  }
+
+  async presentAlertPrompt(title: string, category: ICategory = null) {
+    const alert = await this.alertController.create({
+      header: title,
+      backdropDismiss: false,
+      mode: 'ios',
+      inputs: [
+        {name: 'label', type: 'text', placeholder: 'New Category', value: category && category.label}
+      ],
+      buttons: [
+        {
+          text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => {
+            return false;
+          }
+        },
+        {
+          text: category ? 'Update' : 'Add', handler: (data) => {
+            if (data.label.trim().length < 3 || data.label.trim().length > 25) {
+              setTimeout(async () => {
+                const toast = await this.toastCtrl.create({
+                  color: 'danger',
+                  message: 'Category name required minimum 3 and maximum 25 characters.',
+                  duration: 4000
+                });
+                await toast.present();
+              });
+              return false;
+            }
+            const isDuplicate = this.categories.find(
+              d => {
+                if (category) {
+                  return (
+                    d.label.toLowerCase().indexOf(data.label.trim().toLowerCase()) === 0 &&
+                    category.id !== d.id
+                  );
+                } else {
+                  return (
+                    d.label.toLowerCase().indexOf(data.label.trim().toLowerCase()) === 0
+                  );
+                }
+              }
+            );
+            if (isDuplicate) {
+              setTimeout(async () => {
+                const toast = await this.toastCtrl.create({
+                  color: 'danger',
+                  message: 'Duplicate Category, Category already exists.',
+                  duration: 4000
+                });
+                await toast.present();
+              });
+              return false;
+            } else {
+              if (category) {
+                this.categoriesService.updateData(category, data.label.trim());
+              } else {
+                this.categoriesService.addData(data.label.trim());
+              }
+            }
+          }
+        }
+      ]
     });
+
+    await alert.present();
   }
 
-  applyFilters() {
-    // Pass back a new array of track names to exclude
-    const excludedTrackNames = this.tracks.filter(c => !c.isChecked).map(c => c.name);
-    this.dismiss(excludedTrackNames);
-  }
-
-  dismiss(data?: any) {
+  async dismiss() {
     // using the injected ModalController this page
     // can "dismiss" itself and pass back data
-    this.modalCtrl.dismiss(data);
+    await this.modalCtrl.dismiss();
   }
 
+  filterOnSearch($event: any) {
+    this.searchTextAction.next($event.detail.value);
+  }
+
+  async deleteCategory(category: ICategory) {
+    const alert = await this.alertController.create({
+      header: 'Delete Confirmation!',
+      mode: 'ios',
+      message: `Are you sure! do you want to delete <br><b>${category.label}</b> Category?`,
+      buttons: [
+        {text: 'Cancel', role: 'cancel', cssClass: 'secondary'},
+        {
+          text: 'Okay',
+          handler: () => {
+            this.categoriesService.deleteData(category);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 }

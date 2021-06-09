@@ -13,6 +13,9 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {FormsModule} from '@angular/forms';
 import {ComponentsModule} from './components/components.module';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireAuthModule} from '@angular/fire/auth';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 @NgModule({
   imports: [
@@ -20,6 +23,9 @@ import {ComponentsModule} from './components/components.module';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
     IonicModule.forRoot({
       mode: 'md'
     }),
