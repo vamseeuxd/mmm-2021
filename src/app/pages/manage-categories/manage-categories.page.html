@@ -1,20 +1,49 @@
-<ion-header>
-  <ion-toolbar>
-    <!--<ion-buttons slot="start">
-      <ion-button *ngIf="ios" (click)="dismiss()">Cancel</ion-button>
-      <ion-button *ngIf="!ios" (click)="selectAll(false)">Reset</ion-button>
-    </ion-buttons>-->
+<ion-header mode="ios">
+  <ion-toolbar mode="ios">
 
     <ion-title>
       Manage Categories
     </ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="applyFilters()" strong>Done</ion-button>
+      <ion-button mode="ios" (click)="dismiss()" strong>close</ion-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-toolbar mode="ios">
+    <ion-searchbar (ionChange)="filterOnSearch($event)"></ion-searchbar>
+  </ion-toolbar>
+
 </ion-header>
 
 <ion-content>
+  <ion-list mode="ios" *ngIf="categories$ | async as filteredCategories">
+    <ion-grid [hidden]="filteredCategories.length != 0">
+      <ion-row>
+        <ion-col class="ion-justify-content-center ion-align-items-center">
+          <h5 class="ion-text-center">No Categories Found</h5>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <!--<ion-list-header>
+    </ion-list-header>-->
+    <ion-item *ngFor="let category of filteredCategories">
+      <ion-button (click)="presentAlertPrompt('Edit Category', category)" [hidden]="category.default" mode="ios" color="medium" slot="end">
+        <ion-icon mode="ios" name="create"></ion-icon>
+      </ion-button>
+      <ion-button (click)="deleteCategory(category)" [hidden]="category.default" mode="ios" color="danger" slot="end">
+        <ion-icon mode="ios" name="trash"></ion-icon>
+      </ion-button>
+      {{category.label}}
+    </ion-item>
+  </ion-list>
+
+
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="presentAlertPrompt('Add New Category')">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

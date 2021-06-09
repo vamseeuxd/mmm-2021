@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { UserData } from '../../providers/user-data';
 
 import { UserOptions } from '../../interfaces/user-options';
+import {AngularFireAuth} from '@angular/fire/auth';
+import firebase from 'firebase/app';
 
 
 
@@ -19,6 +21,7 @@ export class LoginPage {
 
   constructor(
     public userData: UserData,
+    public auth: AngularFireAuth,
     public router: Router
   ) { }
 
@@ -33,5 +36,9 @@ export class LoginPage {
 
   onSignup() {
     this.router.navigateByUrl('/signup');
+  }
+
+  async loginWithGoogle() {
+    await this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
   }
 }
