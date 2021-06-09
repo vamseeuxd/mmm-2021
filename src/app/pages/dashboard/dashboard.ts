@@ -15,11 +15,12 @@ import {
 import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
 import {ConferenceData} from '../../providers/conference-data';
 import {UserData} from '../../providers/user-data';
-import {ITransactionGroup, MmmFireService} from '../../services/mmm-fire/mmm-fire.service';
+import {MmmFireService} from '../../services/mmm-fire/mmm-fire.service';
 import {UtilitiesDropDownComponent} from '../../components/utilities-drop-down/utilities-drop-down.component';
 import {ManageCategoriesPage} from '../manage-categories/manage-categories.page';
 import {ManageExpensesForPage} from '../manage-expenses-for/manage-expenses-for.page';
 import {ManageTaxSavingSectionsPage} from '../manage-tax-saving-sections/manage-tax-saving-sections.page';
+import {ITransactionGroup} from '../../interfaces/i-transaction.group';
 
 @Component({
   selector: 'page-dashboard',

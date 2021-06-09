@@ -3,33 +3,9 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {collectionData} from 'rxfire/firestore';
 import * as moment from 'moment';
+import {ITransaction} from '../../interfaces/i.transaction';
+import {ITransactionGroup} from '../../interfaces/i-transaction.group';
 
-export interface ITransaction {
-  id: string;
-  amount: string;
-  amountPaid: string;
-  paymentRemarks: string;
-  dueDate: string;
-  paidFrom: string;
-  isPaid: string;
-  remarks: string;
-  paidOn: string;
-  type: string;
-  for: string;
-  category: string;
-  taxSavingSection: string;
-  repeat: string;
-  noOfTimesRepeat: number;
-  repeatStartDate: string;
-  isTaxSavings: string;
-  name: string;
-}
-
-
-export interface ITransactionGroup {
-  dueDate: string;
-  transactions: any[];
-}
 
 const app = firebase.initializeApp({
   apiKey: 'AIzaSyDRsu6s4hY7H837ZxpqOPEMM8rQBfoedEk',
@@ -52,6 +28,10 @@ export class MmmFireService {
   transactions: ITransaction[] = [];
 
   constructor() {
+    this.getFakeTransactions();
+  }
+
+  getFakeTransactions(): void {
     fetch('./assets/data/transaction_list.json')
       .then(response => response.json())
       .then(data => {
